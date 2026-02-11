@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Auto Host</title>
+  <title>Create Proposal</title>
   <style>
-    body { font-family: Arial; text-align: center; margin-top: 100px; }
-    input { padding: 10px; width: 300px; }
-    button { padding: 10px 20px; margin-top: 20px; display: none; }
-    #linkBox { margin-top: 20px; }
+    body { font-family: Arial; text-align: center; margin-top: 50px; }
+    input, textarea { width: 400px; padding: 10px; margin: 10px; }
+    textarea { height: 100px; }
+    button { padding: 10px 20px; margin-top: 15px; }
   </style>
 </head>
 <body>
 
-  <h2>Create Your Custom Site</h2>
-  <input type="text" id="userText" placeholder="Enter your text..." />
-  <br>
-  <button id="hostBtn">Host</button>
+  <h2>Create Your Proposal Site</h2>
 
-  <div id="linkBox"></div>
+  <div>
+    <input type="text" id="yourName" placeholder="Your Name (e.g. Aryan)" /><br>
+    <input type="text" id="herName" placeholder="Her Name (e.g. Neha)" /><br>
+    <textarea id="appreciation" placeholder="Write appreciation paragraph..."></textarea><br>
+    <textarea id="confession" placeholder="Write your confession letter..."></textarea><br>
 
-  <!-- Firebase -->
+    <label>
+      <input type="checkbox" id="useDefault"> Use default template values
+    </label><br>
+
+    <button id="hostBtn">Host My Site</button>
+  </div>
+
+  <div id="result"></div>
+
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
@@ -30,20 +39,11 @@
       projectId: "proposal-apoorva-sarvagy",
       storageBucket: "proposal-apoorva-sarvagy.firebasestorage.app",
       messagingSenderId: "794226715688",
-      appId: "1:794226715688:web:284222db7af709b2cd591d",
-      measurementId: "G-BZ4R12MR9T"
+      appId: "1:794226715688:web:284222db7af709b2cd591d"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
-    const input = document.getElementById("userText");
-    const hostBtn = document.getElementById("hostBtn");
-    const linkBox = document.getElementById("linkBox");
-
-    input.addEventListener("input", () => {
-      hostBtn.style.display = input.value.trim() ? "inline-block" : "none";
-    });
 
     function generateToken() {
       const time = Date.now().toString(36);
@@ -51,39 +51,39 @@
       return time + random;
     }
 
-    async function createUniqueToken() {
-      let token;
-      let exists = true;
+    document.getElementById("hostBtn").addEventListener("click", async () => {
 
-      while (exists) {
-        token = generateToken();
-        const snap = await db.ref("Auto-Host/" + token).once("value");
-        exists = snap.exists();
+      const useDefault = document.getElementById("useDefault").checked;
+
+      let data;
+
+      if (useDefault) {
+        data = {
+          yourName: "Aryan",
+          herName: "Neha",
+          appreciation: "You are my safe space and the light in my life.",
+          confession: "Over time, my admiration for you has grown into something deeper..."
+        };
+      } else {
+        data = {
+          yourName: document.getElementById("yourName").value,
+          herName: document.getElementById("herName").value,
+          appreciation: document.getElementById("appreciation").value,
+          confession: document.getElementById("confession").value
+        };
       }
-      return token;
-    }
 
-    hostBtn.addEventListener("click", async () => {
-      const text = input.value.trim();
-      if (!text) return;
-
-      const token = await createUniqueToken();
+      const token = generateToken();
 
       await db.ref("Auto-Host/" + token).set({
-        token: token,
-        text: text,
+        ...data,
         createdAt: Date.now()
       });
 
       const link = `${window.location.origin}/auto-host/hosted.html?token=${token}`;
 
-      linkBox.innerHTML = `
-        <p>Your site is ready:</p>
-        <a href="${link}" target="_blank">${link}</a>
-      `;
-
-      input.value = "";
-      hostBtn.style.display = "none";
+      document.getElementById("result").innerHTML =
+        `<p>Site Created:</p><a href="${link}" target="_blank">${link}</a>`;
     });
   </script>
 
