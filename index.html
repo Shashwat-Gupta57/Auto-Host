@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Auto Host</title>
+  <title>Hosted Page</title>
   <style>
-    body { font-family: Arial; text-align: center; margin-top: 100px; }
-    input { padding: 10px; width: 300px; }
-    button { padding: 10px 20px; margin-top: 20px; display: none; }
-    #linkBox { margin-top: 20px; }
+    body { 
+      font-family: Arial; 
+      text-align: center; 
+      margin-top: 100px; 
+    }
+    #content {
+      font-size: 30px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
 
-  <h2>Create Your Custom Site</h2>
-  <input type="text" id="userText" placeholder="Enter your text..." />
-  <br>
-  <button id="hostBtn">Host</button>
-
-  <div id="linkBox"></div>
+  <h1>Welcome</h1>
+  <div id="content">Loading...</div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -38,44 +39,23 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const input = document.getElementById("userText");
-    const hostBtn = document.getElementById("hostBtn");
-    const linkBox = document.getElementById("linkBox");
+    const contentDiv = document.getElementById("content");
 
-    // Show button only when text is entered
-    input.addEventListener("input", () => {
-      hostBtn.style.display = input.value.trim() ? "inline-block" : "none";
-    });
+    // Get token from URL
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
 
-    // Generate absolutely unique token
-    function generateToken() {
-      const time = Date.now();
-      const random = crypto.getRandomValues(new Uint32Array(1))[0];
-      return time.toString(36) + random.toString(36);
-    }
-
-    hostBtn.addEventListener("click", () => {
-      const text = input.value.trim();
-      if (!text) return;
-
-      const token = generateToken();
-
-      // Save in Firebase
-      db.ref(token).set({
-        text: text
-      }).then(() => {
-
-        const link = `${window.location.origin}/auto-host/template/?token=${token}`;
-
-        linkBox.innerHTML = `
-          <p>Your site is ready:</p>
-          <a href="${link}" target="_blank">${link}</a>
-        `;
-
-        input.value = "";
-        hostBtn.style.display = "none";
+    if (!token) {
+      contentDiv.innerText = "Invalid Link.";
+    } else {
+      db.ref(token).once("value").then(snapshot => {
+        if (snapshot.exists()) {
+          contentDiv.innerText = snapshot.val().text;
+        } else {
+          contentDiv.innerText = "No data found.";
+        }
       });
-    });
+    }
   </script>
 
 </body>
