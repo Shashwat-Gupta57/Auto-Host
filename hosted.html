@@ -762,7 +762,8 @@
             
             <div class="letter-revealed" id="modal-text">
                 <p id="modal-greeting">Hi there,</p>
-                <p style="margin: 15px 0;">I created this little corner of the internet just for you. Take your time, scroll slowly, and know that every word here comes from the heart.</p>
+                <!-- ADDED ID for dynamic targeting -->
+                <p id="landing-message" style="margin: 15px 0;">I created this little corner of the internet just for you. Take your time, scroll slowly, and know that every word here comes from the heart.</p>
                 <p style="font-size: 0.9rem; font-style: italic; color: #888;">(And yes, I rehearsed this whole thing in my head about 17 times.)</p>
                 <button class="modal-btn" id="close-modal-btn" style="background: var(--muted-lavender); margin-top: 20px;">Okay, let's go ✨</button>
             </div>
@@ -1350,6 +1351,7 @@
         const elHeroHeading = document.getElementById('hero-heading');
         const elModalHeading = document.getElementById('modal-heading');
         const elModalGreeting = document.getElementById('modal-greeting');
+        const elLandingMessage = document.getElementById('landing-message');
         const elAppreciationText = document.getElementById('appreciation-text');
         const elConfessionGreeting = document.getElementById('confession-greeting');
         const elConfessionText = document.getElementById('confession-text');
@@ -1375,6 +1377,7 @@
                         const yourName = data.yourName || "Me";
                         const appreciation = data.appreciation || "You are amazing.";
                         const confession = data.confession || "I really like you.";
+                        const landingMessage = data.landingMessage || "I created this little corner of the internet just for you. Take your time, scroll slowly, and know that every word here comes from the heart.";
 
                         // Update Page Title
                         elPageTitle.textContent = "For " + herName + " ❤️";
@@ -1385,6 +1388,7 @@
                         // Update Modal
                         elModalHeading.textContent = "For " + herName;
                         elModalGreeting.textContent = "Hi " + herName + ",";
+                        elLandingMessage.textContent = landingMessage;
 
                         // Update Appreciation
                         elAppreciationText.textContent = appreciation;
