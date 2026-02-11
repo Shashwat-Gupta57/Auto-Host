@@ -1,0 +1,6 @@
+<script>
+  // Redirect clean URL to index.html but preserve token
+  var path = window.location.pathname;
+  var token = path.substring(path.lastIndexOf("/") + 1);
+  window.location.replace("/auto-host/template/index.html#" + token);
+</script>
