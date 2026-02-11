@@ -18,12 +18,11 @@
 
   <div id="linkBox"></div>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBIyIXYNvVhJnSK58rB29K9n7SNnbaoqnc",
       authDomain: "proposal-apoorva-sarvagy.firebaseapp.com",
@@ -42,39 +41,49 @@
     const hostBtn = document.getElementById("hostBtn");
     const linkBox = document.getElementById("linkBox");
 
-    // Show button only when text is entered
     input.addEventListener("input", () => {
       hostBtn.style.display = input.value.trim() ? "inline-block" : "none";
     });
 
-    // Generate absolutely unique token
     function generateToken() {
-      const time = Date.now();
-      const random = crypto.getRandomValues(new Uint32Array(1))[0];
-      return time.toString(36) + random.toString(36);
+      const time = Date.now().toString(36);
+      const random = crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
+      return time + random;
     }
 
-    hostBtn.addEventListener("click", () => {
+    async function createUniqueToken() {
+      let token;
+      let exists = true;
+
+      while (exists) {
+        token = generateToken();
+        const snap = await db.ref("Auto-Host/" + token).once("value");
+        exists = snap.exists();
+      }
+      return token;
+    }
+
+    hostBtn.addEventListener("click", async () => {
       const text = input.value.trim();
       if (!text) return;
 
-      const token = generateToken();
+      const token = await createUniqueToken();
 
-      // Save in Firebase
-      db.ref(token).set({
-        text: text
-      }).then(() => {
-
-        const link = `${window.location.origin}/auto-host/template/?token=${token}`;
-
-        linkBox.innerHTML = `
-          <p>Your site is ready:</p>
-          <a href="${link}" target="_blank">${link}</a>
-        `;
-
-        input.value = "";
-        hostBtn.style.display = "none";
+      await db.ref("Auto-Host/" + token).set({
+        token: token,
+        text: text,
+        createdAt: Date.now()
       });
+
+      const link = `${window.location.origin}/auto-host/template/${token}`;
+
+      linkBox.innerHTML = `
+        <p>Your site is ready:</p>
+        <a href="${link}" target="_blank">${link}</a>
+      `;
+
+      input.value = "";
+      hostBtn.style.display = "none";
     });
   </script>
 
