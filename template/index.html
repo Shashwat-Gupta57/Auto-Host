@@ -3,15 +3,8 @@
 <head>
   <title>Hosted Page</title>
   <style>
-    body { 
-      font-family: Arial; 
-      text-align: center; 
-      margin-top: 100px; 
-    }
-    #content {
-      font-size: 30px;
-      font-weight: bold;
-    }
+    body { font-family: Arial; text-align: center; margin-top: 100px; }
+    #content { font-size: 30px; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -19,12 +12,10 @@
   <h1>Welcome</h1>
   <div id="content">Loading...</div>
 
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBIyIXYNvVhJnSK58rB29K9n7SNnbaoqnc",
       authDomain: "proposal-apoorva-sarvagy.firebaseapp.com",
@@ -41,16 +32,17 @@
 
     const contentDiv = document.getElementById("content");
 
-    // Get token from URL
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
+    // Extract token from URL path
+    const pathParts = window.location.pathname.split("/");
+    const token = pathParts[pathParts.length - 1];
 
     if (!token) {
       contentDiv.innerText = "Invalid Link.";
     } else {
-      db.ref(token).once("value").then(snapshot => {
+      db.ref("Auto-Host/" + token).once("value").then(snapshot => {
         if (snapshot.exists()) {
-          contentDiv.innerText = snapshot.val().text;
+          const data = snapshot.val();
+          contentDiv.innerText = data.text;
         } else {
           contentDiv.innerText = "No data found.";
         }
