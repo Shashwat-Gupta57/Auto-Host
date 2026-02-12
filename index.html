@@ -142,6 +142,7 @@
             outline: none;
             transition: all 0.3s;
             background: #fffcf8;
+            margin-bottom: 10px;
         }
 
         input[type="text"]:focus, textarea:focus {
@@ -154,11 +155,25 @@
             min-height: 100px;
         }
 
-        textarea:disabled {
+        textarea:disabled, input:disabled {
             background: #f5f5f5;
             color: #999;
             border-color: #ddd;
             cursor: not-allowed;
+        }
+        
+        .sub-field-group {
+            border-left: 3px solid var(--light-peach);
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-question-block {
+            background: #fffcf8;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--light-peach);
+            margin-bottom: 15px;
         }
 
         /* --- Toggles --- */
@@ -323,6 +338,102 @@
                 </label>
             </div>
 
+            <!-- Open When Toggle -->
+            <div class="section-title">💌 Include Open When Letters?</div>
+            <div class="toggle-group">
+                <label class="radio-label">
+                    <input type="radio" name="openWhenOption" value="yes" checked onchange="toggleOpenWhen()">
+                    Yes, include them
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="openWhenOption" value="no" onchange="toggleOpenWhen()">
+                    No, remove this section
+                </label>
+            </div>
+            
+            <div id="open-when-fields" class="sub-field-group">
+                <label>Open when you're sad</label>
+                <textarea id="ow-sad" placeholder="Your message here..." oninput="validateForm()"></textarea>
+                
+                <label>Open when you miss me</label>
+                <textarea id="ow-miss" placeholder="Your message here..." oninput="validateForm()"></textarea>
+                
+                <label>Open when you're overthinking</label>
+                <textarea id="ow-overthink" placeholder="Your message here..." oninput="validateForm()"></textarea>
+            </div>
+
+            <!-- Love Quiz Toggle -->
+            <div class="section-title">❓ Include Love Quiz?</div>
+            <div class="toggle-group">
+                <label class="radio-label">
+                    <input type="radio" name="quizOption" value="yes" checked onchange="toggleQuiz()">
+                    Yes, include a fun quiz
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="quizOption" value="no" onchange="toggleQuiz()">
+                    No, remove this section
+                </label>
+            </div>
+
+            <div id="quiz-fields" class="sub-field-group">
+                <div class="quiz-question-block">
+                    <label>Question 1</label>
+                    <input type="text" id="q1-text" placeholder="e.g. What's my favorite thing about you?" oninput="validateForm()">
+                    <div class="row">
+                        <div class="col"><input type="text" id="q1-o1" placeholder="Option 1" oninput="validateForm()"></div>
+                        <div class="col"><input type="text" id="q1-o2" placeholder="Option 2" oninput="validateForm()"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><input type="text" id="q1-o3" placeholder="Option 3" oninput="validateForm()"></div>
+                        <div class="col"><input type="text" id="q1-o4" placeholder="Option 4" oninput="validateForm()"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question-block">
+                    <label>Question 2</label>
+                    <input type="text" id="q2-text" placeholder="e.g. Where is our dream date?" oninput="validateForm()">
+                    <div class="row">
+                        <div class="col"><input type="text" id="q2-o1" placeholder="Option 1" oninput="validateForm()"></div>
+                        <div class="col"><input type="text" id="q2-o2" placeholder="Option 2" oninput="validateForm()"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><input type="text" id="q2-o3" placeholder="Option 3" oninput="validateForm()"></div>
+                        <div class="col"><input type="text" id="q2-o4" placeholder="Option 4" oninput="validateForm()"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question-block">
+                    <label>Question 3</label>
+                    <input type="text" id="q3-text" placeholder="e.g. How much do I love you?" oninput="validateForm()">
+                    <div class="row">
+                        <div class="col"><input type="text" id="q3-o1" placeholder="Option 1" oninput="validateForm()"></div>
+                        <div class="col"><input type="text" id="q3-o2" placeholder="Option 2" oninput="validateForm()"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><input type="text" id="q3-o3" placeholder="Option 3" oninput="validateForm()"></div>
+                        <div class="col"><input type="text" id="q3-o4" placeholder="Option 4" oninput="validateForm()"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secret Message Toggle -->
+            <div class="section-title">🔒 Include Secret Locked Message?</div>
+            <div class="toggle-group">
+                <label class="radio-label">
+                    <input type="radio" name="secretOption" value="yes" checked onchange="toggleSecret()">
+                    Yes, unlock after she says Yes
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="secretOption" value="no" onchange="toggleSecret()">
+                    No, keep it simple
+                </label>
+            </div>
+            
+            <div id="secret-field" class="sub-field-group">
+                <label>Secret Message (Hidden until "Yes")</label>
+                <textarea id="secret-msg" placeholder="If you said yes... I promise I’ll never stop choosing you." oninput="validateForm()"></textarea>
+            </div>
+
             <!-- Landing Letter -->
             <div class="section-title">💌 Landing Letter Message</div>
             <div class="toggle-group">
@@ -415,13 +526,39 @@
         const DEFAULTS = {
             landing: "I created this little corner of the internet just for you. Take your time, scroll slowly, and know that every word here comes from the heart.",
             appreciation: "You are my safe space and the light in my life. Every moment with you feels like a beautiful dream I never want to wake up from.",
-            confession: "Over time, my admiration for you has grown into something deeper. You make me want to be a better person, and I can't imagine my days without your smile."
+            confession: "Over time, my admiration for you has grown into something deeper. You make me want to be a better person, and I can't imagine my days without your smile.",
+            openWhen: {
+                sad: "Remember that you are loved beyond measure. Bad days don't last, but my support for you does.",
+                miss: "I'm probably missing you too, right this second. Close your eyes, I'm right there with you.",
+                overthink: "Breathe. You are doing amazing. Everything is going to be okay. I've got you."
+            },
+            quiz: [
+                { text: "What's my favorite thing about you?", options: ["Your Smile", "Your Eyes", "Your Laugh", "Everything"] },
+                { text: "Where is our dream date?", options: ["Beach", "Mountains", "Cozy Cafe", "Rooftop Dinner"] },
+                { text: "How much do I love you?", options: ["A lot", "To the moon", "Infinity", "Beyond words"] }
+            ],
+            secretMessage: "If you said yes... I promise I’ll never stop choosing you."
         };
 
-        // Initialize Textareas with defaults
+        // Initialize fields
         document.getElementById('landing-text').value = DEFAULTS.landing;
         document.getElementById('appreciation-text').value = DEFAULTS.appreciation;
         document.getElementById('confession-text').value = DEFAULTS.confession;
+        document.getElementById('secret-msg').value = DEFAULTS.secretMessage;
+        
+        // Populate Quiz Defaults
+        for(let i=1; i<=3; i++) {
+            document.getElementById(`q${i}-text`).value = DEFAULTS.quiz[i-1].text;
+            document.getElementById(`q${i}-o1`).value = DEFAULTS.quiz[i-1].options[0];
+            document.getElementById(`q${i}-o2`).value = DEFAULTS.quiz[i-1].options[1];
+            document.getElementById(`q${i}-o3`).value = DEFAULTS.quiz[i-1].options[2];
+            document.getElementById(`q${i}-o4`).value = DEFAULTS.quiz[i-1].options[3];
+        }
+
+        // Populate Open When Defaults
+        document.getElementById('ow-sad').value = DEFAULTS.openWhen.sad;
+        document.getElementById('ow-miss').value = DEFAULTS.openWhen.miss;
+        document.getElementById('ow-overthink').value = DEFAULTS.openWhen.overthink;
 
         // --- 3. Toggle Logic ---
         function toggleField(type) {
@@ -431,12 +568,32 @@
             if (isCustom) {
                 textarea.disabled = false;
                 textarea.focus();
-                // If value is still default, clear it for user convenience (optional, but keeping text is safer)
             } else {
                 textarea.disabled = true;
                 textarea.value = DEFAULTS[type];
                 document.getElementById(`${type}-error`).style.display = 'none';
             }
+            validateForm();
+        }
+
+        function toggleOpenWhen() {
+            const enabled = document.querySelector('input[name="openWhenOption"]:checked').value === 'yes';
+            const fields = document.getElementById('open-when-fields');
+            fields.style.display = enabled ? 'block' : 'none';
+            validateForm();
+        }
+
+        function toggleQuiz() {
+            const enabled = document.querySelector('input[name="quizOption"]:checked').value === 'yes';
+            const fields = document.getElementById('quiz-fields');
+            fields.style.display = enabled ? 'block' : 'none';
+            validateForm();
+        }
+
+        function toggleSecret() {
+            const enabled = document.querySelector('input[name="secretOption"]:checked').value === 'yes';
+            const fields = document.getElementById('secret-field');
+            fields.style.display = enabled ? 'block' : 'none';
             validateForm();
         }
 
@@ -462,6 +619,29 @@
                     errorEl.style.display = 'none';
                 }
             });
+            
+            // Check Open When
+            if (document.querySelector('input[name="openWhenOption"]:checked').value === 'yes') {
+                if (!document.getElementById('ow-sad').value.trim()) isValid = false;
+                if (!document.getElementById('ow-miss').value.trim()) isValid = false;
+                if (!document.getElementById('ow-overthink').value.trim()) isValid = false;
+            }
+            
+            // Check Quiz
+            if (document.querySelector('input[name="quizOption"]:checked').value === 'yes') {
+                for(let i=1; i<=3; i++) {
+                    if (!document.getElementById(`q${i}-text`).value.trim()) isValid = false;
+                    if (!document.getElementById(`q${i}-o1`).value.trim()) isValid = false;
+                    if (!document.getElementById(`q${i}-o2`).value.trim()) isValid = false;
+                    if (!document.getElementById(`q${i}-o3`).value.trim()) isValid = false;
+                    if (!document.getElementById(`q${i}-o4`).value.trim()) isValid = false;
+                }
+            }
+
+            // Check Secret Message
+            if (document.querySelector('input[name="secretOption"]:checked').value === 'yes') {
+                if (!document.getElementById('secret-msg').value.trim()) isValid = false;
+            }
 
             document.getElementById('hostBtn').disabled = !isValid;
         }
@@ -510,13 +690,40 @@
                 confession: getData('confession'),
                 createdAt: Date.now()
             };
+            
+            if (document.querySelector('input[name="openWhenOption"]:checked').value === 'yes') {
+                data.openWhen = {
+                    sad: document.getElementById('ow-sad').value.trim(),
+                    miss: document.getElementById('ow-miss').value.trim(),
+                    overthink: document.getElementById('ow-overthink').value.trim()
+                };
+            }
+            
+            if (document.querySelector('input[name="quizOption"]:checked').value === 'yes') {
+                data.quiz = {};
+                for(let i=1; i<=3; i++) {
+                    data.quiz[`question${i}`] = {
+                        text: document.getElementById(`q${i}-text`).value.trim(),
+                        options: [
+                            document.getElementById(`q${i}-o1`).value.trim(),
+                            document.getElementById(`q${i}-o2`).value.trim(),
+                            document.getElementById(`q${i}-o3`).value.trim(),
+                            document.getElementById(`q${i}-o4`).value.trim()
+                        ]
+                    };
+                }
+            }
+
+            if (document.querySelector('input[name="secretOption"]:checked').value === 'yes') {
+                data.secretMessage = document.getElementById('secret-msg').value.trim();
+            }
 
             try {
                 const token = generateToken();
                 await db.ref("Auto-Host/" + token).set(data);
 
                 // Success UI
-                const link = `https://shashwat-gupta57.github.io/auto-host/hosted?token=${token}`;
+                const link = `${window.location.origin}/hosted.html?token=${token}`;
                 document.getElementById('form-card').style.display = 'none';
                 document.getElementById('result-container').style.display = 'block';
                 document.getElementById('result-link').textContent = link;
