@@ -29,6 +29,11 @@
         .abs-fill { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
         h1, h2, h3 { font-family: var(--font-hand); color: var(--text-cocoa); }
 
+        /* Love Meter */
+        #love-meter { position: fixed; top: 0; left: 0; width: 100%; height: 6px; background: #FFE5EC; z-index: 5000; }
+        #love-fill { height: 100%; width: 0%; background: linear-gradient(to right, #F8C8DC, #E75480); transition: width 0.8s ease; }
+        #love-msg { position: absolute; top: 15px; right: 10px; font-size: 0.9rem; color: var(--soft-rose); font-weight: bold; opacity: 0; transition: opacity 0.5s; background: rgba(255,255,255,0.9); padding: 5px 15px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
         /* Floating Hearts */
         .bg-hearts { pointer-events: none; z-index: -1; overflow: hidden; }
         .bg-heart { position: absolute; color: var(--blush-pink); opacity: 0.4; animation: floatUp linear infinite; }
@@ -43,7 +48,7 @@
         section { padding: 80px 0; opacity: 0; transform: translateY(30px); transition: 1s ease; }
         section.visible { opacity: 1; transform: translateY(0); }
 
-        .card, .pickup-card, .game-wrapper, .think-card, .content-wrapper, .music-card {
+        .card, .pickup-card, .game-wrapper, .think-card, .content-wrapper, .music-card, .quiz-card, .secret-card {
             background: white; border-radius: 20px; box-shadow: var(--shadow-soft); transition: transform 0.3s ease;
         }
         .card { padding: 30px; }
@@ -60,10 +65,80 @@
         .tape { position: absolute; width: 120px; height: 35px; background: rgba(255,255,255,0.6); top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         #appreciation p { font-size: 1.2rem; color: var(--text-charcoal); }
 
+        /* Open When Section (Envelope Style) */
+        #open-when { background: linear-gradient(to bottom, #FFF8F2, #fff0f6); }
+        .open-when-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin-top: 30px; }
+        
+        .open-when-card { 
+            width: 280px; height: 180px; position: relative; background: #fffcf8;
+            border: 1px solid #eee; border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08); cursor: pointer;
+            transition: transform 0.3s;
+            display: flex; align-items: flex-end; justify-content: center;
+            perspective: 1000px; z-index: 1;
+        }
+        .open-when-card:hover { transform: translateY(-5px); }
+        
+        /* Envelope Visuals */
+        .envelope-body {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+            background: var(--light-peach);
+            clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%);
+            z-index: 3; pointer-events: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .envelope-flap {
+            position: absolute; top: 0; left: 0; width: 100%; height: 50%;
+            background: #ffd6e0;
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            transform-origin: top; transition: transform 0.6s ease, z-index 0.6s;
+            z-index: 4;
+        }
+        .envelope-bg {
+            position: absolute; inset: 0; background: white; border: 1px solid var(--blush-pink); z-index: 1; border-radius: 5px;
+        }
+        
+        /* Content logic */
+        .letter-title { 
+            font-weight: 700; color: var(--warm-plum); font-size: 1rem; 
+            z-index: 5; position: absolute; bottom: 20px; width: 100%; text-align: center;
+            transition: opacity 0.3s; pointer-events: none;
+        }
+        .letter-paper {
+            position: absolute; bottom: 10px; left: 10px; right: 10px; top: 10px;
+            background: white; padding: 15px;
+            font-size: 0.9rem; color: var(--text-charcoal);
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(0); z-index: 2;
+            overflow-y: auto; display: flex; align-items: center; justify-content: center; text-align: center;
+            opacity: 0;
+        }
+        
+        /* Open State */
+        .open-when-card.active { z-index: 10; }
+        .open-when-card.active .envelope-flap { transform: rotateX(180deg); z-index: 1; }
+        .open-when-card.active .letter-title { opacity: 0; }
+        .open-when-card.active .letter-paper { transform: translateY(-50px); opacity: 1; height: 180px; z-index: 5; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+
         /* Pickup Lines */
         .pickup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .pickup-card { background: var(--light-peach); padding: 25px; text-align: center; font-size: 1.1rem; border: 1px solid var(--blush-pink); }
         .pickup-card:hover { background: var(--blush-pink); transform: scale(1.05) rotate(1deg); }
+
+        /* Quiz Section */
+        #quiz-section { background: var(--creamy-white); }
+        .quiz-container { max-width: 600px; margin: 0 auto; }
+        .quiz-card { padding: 30px; margin-bottom: 25px; border: 1px solid var(--light-peach); }
+        .quiz-question { font-weight: 700; color: var(--text-cocoa); font-size: 1.1rem; margin-bottom: 15px; }
+        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .quiz-option { 
+            padding: 10px; border: 1px solid var(--blush-pink); border-radius: 10px; 
+            text-align: center; cursor: pointer; transition: background 0.2s; font-size: 0.9rem;
+        }
+        .quiz-option:hover { background: var(--light-peach); }
+        .quiz-option.selected { background: var(--soft-rose); color: white; border-color: var(--soft-rose); }
+        #quiz-result { text-align: center; font-size: 1.5rem; color: var(--soft-rose); margin-top: 30px; display: none; font-family: var(--font-hand); }
 
         /* Reasons */
         .reasons-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
@@ -96,12 +171,40 @@
         @keyframes floatUpGame { to { transform: translateY(-380px); opacity: 0; } }
 
         /* Overlays & Modals */
-        .overlay, .game-overlay, #landing-modal { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; }
+        .overlay, .game-overlay, #landing-modal, #intro-overlay, #heartbeat-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; }
         .game-overlay { background: rgba(255,255,255,0.95); }
-        .overlay, #landing-modal { position: fixed; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+        .overlay, #landing-modal, #intro-overlay, #heartbeat-overlay { position: fixed; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
         .overlay.active, #landing-modal.visible { opacity: 1; pointer-events: all; }
-        #landing-modal { background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); z-index: 3000; }
         
+        /* Intro Overlay */
+        #intro-overlay { 
+            z-index: 4000; 
+            background: linear-gradient(135deg, #fff8f2, #ffe5ec, #f8c8dc);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            opacity: 1; 
+            pointer-events: all; 
+            transition: opacity 1s ease-out; 
+        }
+        @keyframes gradientBG { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+        #intro-text { 
+            font-family: var(--font-hand); 
+            font-size: 2rem; 
+            color: var(--warm-plum); 
+            text-shadow: 0 0 20px rgba(231, 84, 128, 0.3); 
+            text-align: center; 
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out; 
+        }
+        @media (min-width: 768px) { #intro-text { font-size: 2.8rem; } }
+        
+        /* Landing Modal */
+        #landing-modal { background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); z-index: 3000; transition: opacity 1s; }
         .modal-envelope { background: white; padding: 40px 30px; width: 90%; max-width: 500px; border-radius: 10px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.15); border-top: 5px solid var(--soft-rose); transform: scale(0.9); transition: transform 0.4s; }
         #landing-modal.visible .modal-envelope { transform: scale(1); }
         
@@ -116,6 +219,20 @@
         .btn-think { background: var(--muted-lavender); color: white; padding: 15px 50px; font-size: 1.5rem; box-shadow: 0 5px 25px rgba(200, 162, 200, 0.4); }
         .btn-think:hover { background: #b38cb3; transform: scale(1.05); }
 
+        /* Heartbeat Overlay */
+        #heartbeat-overlay { background: rgba(255, 248, 242, 0.95); z-index: 3500; transition: opacity 0.5s; opacity: 0; pointer-events: none; }
+        #heartbeat-overlay.active { opacity: 1; pointer-events: all; }
+        .pulsing-heart { font-size: 5rem; color: var(--soft-rose); animation: heartPulse 1.2s infinite; }
+        @keyframes heartPulse {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.3); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            60% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+        .heartbeat-text { margin-top: 20px; font-family: var(--font-hand); font-size: 2rem; color: var(--warm-plum); }
+
         /* Final Decision */
         #final-decision { min-height: 90vh; background: var(--gradient-final); padding-top: 100px; display: flex; flex-direction: column; align-items: center; position: relative; }
         .custom-shape-divider-top { position: absolute; top: 0; width: 100%; overflow: hidden; line-height: 0; }
@@ -123,8 +240,20 @@
         .custom-shape-divider-top .shape-fill { fill: #fff0f6; }
         #final-decision h2 { font-size: 4rem; color: var(--soft-rose); margin-bottom: 20px; text-align: center; }
 
+        /* Secret Message Card */
+        #secret-section { display: none; padding-bottom: 80px; background: var(--gradient-final); width: 100%; }
+        .secret-card { background: white; border-radius: 20px; padding: 40px; box-shadow: var(--shadow-soft); border: 2px solid var(--blush-pink); text-align: center; position: relative; overflow: hidden; transition: all 0.8s ease; max-width: 600px; margin: 0 auto; transform: scale(0.95); opacity: 0.5; }
+        .secret-content { font-size: 1.2rem; color: var(--text-cocoa); filter: blur(8px); transition: filter 1.5s ease; opacity: 0.5; }
+        .lock-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; transition: opacity 1s ease; z-index: 2; }
+        .lock-icon { font-size: 3rem; margin-bottom: 10px; }
+        .lock-text { font-family: var(--font-body); font-weight: 600; color: var(--warm-plum); }
+        .secret-card.unlocked { transform: scale(1); opacity: 1; }
+        .secret-card.unlocked .secret-content { filter: blur(0); opacity: 1; }
+        .secret-card.unlocked .lock-overlay { opacity: 0; pointer-events: none; }
+
         /* Success/Think Overlays */
-        #success-overlay { background: radial-gradient(circle, #fff0f5 0%, #ffe4e1 100%); text-align: center; }
+        #success-overlay { background: radial-gradient(circle, #fff0f5 0%, #ffe4e1 100%); text-align: center; transition: opacity 0.8s ease; }
+        #success-overlay.fade-out { opacity: 0; pointer-events: none; }
         #success-overlay h2 { font-size: 5rem; color: var(--soft-rose); animation: popIn 0.8s; }
         #think-overlay { background: radial-gradient(circle, #f3e5f5 0%, #e1bee7 100%); }
         .think-card { padding: 40px; max-width: 600px; border: 2px solid var(--muted-lavender); text-align: center; }
@@ -170,6 +299,7 @@
             .memory-grid { gap: 8px; }
             .button-group { flex-direction: column; gap: 20px; width: 100%; padding: 0 20px; }
             .btn-yes, .btn-think { width: 100%; }
+            .quiz-options { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -177,8 +307,25 @@
 
     <div class="bg-hearts abs-fill" id="bg-hearts"></div>
 
+    <!-- Love Progress Meter -->
+    <div id="love-meter">
+        <div id="love-fill"></div>
+        <div id="love-msg">Looks like we're perfectly synced 💞</div>
+    </div>
+
+    <!-- Soft Cinematic Intro -->
+    <div id="intro-overlay">
+        <div id="intro-text"></div>
+    </div>
+
+    <!-- Heartbeat Sync Overlay -->
+    <div id="heartbeat-overlay">
+        <div class="pulsing-heart">❤️</div>
+        <div class="heartbeat-text">My heart’s been doing this for you...</div>
+    </div>
+
     <!-- Landing Modal -->
-    <div id="landing-modal" class="visible">
+    <div id="landing-modal">
         <div class="modal-envelope">
             <div id="modal-initial">
                 <div style="font-size: 4rem; color: var(--soft-rose); margin-bottom: 20px;">💌</div>
@@ -220,6 +367,16 @@
                 <div class="music-controls"><button class="play-btn">▶️</button></div>
                 <div class="progress-container"><div class="progress-bar"></div></div>
                 <div class="time-info"><span class="curr">0:00</span><span class="dur">0:00</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Open When Section -->
+    <section id="open-when" style="display:none;">
+        <div class="container">
+            <h2 style="text-align:center; font-size: 3rem; color: var(--warm-plum);">Open When...</h2>
+            <div class="open-when-grid" id="open-when-container">
+                <!-- Cards injected via JS -->
             </div>
         </div>
     </section>
@@ -280,6 +437,17 @@
                     <div class="time-info"><span class="curr">0:00</span><span class="dur">0:00</span></div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- NEW: Love Quiz Section -->
+    <section id="quiz-section" style="display:none;">
+        <div class="container">
+            <h2 style="text-align:center; font-size: 3rem; color: var(--soft-rose); margin-bottom: 30px;">Just One Little Test...</h2>
+            <div class="quiz-container" id="quiz-container">
+                <!-- Quiz Cards injected via JS -->
+            </div>
+            <div id="quiz-result">Correct answer was always you. ❤️</div>
         </div>
     </section>
 
@@ -360,6 +528,21 @@
         </div>
     </section>
 
+    <!-- NEW: Secret Locked Message Section -->
+    <section id="secret-section">
+        <div class="container">
+            <div class="secret-card" id="secret-card">
+                <div class="lock-overlay">
+                    <div class="lock-icon">🔒</div>
+                    <div class="lock-text">Something special is locked...</div>
+                </div>
+                <div class="secret-content" id="secret-content">
+                    If you said yes... I promise I’ll never stop choosing you.
+                </div>
+            </div>
+        </div>
+    </section>
+
     <div class="overlay" id="success-overlay">
         <h2 id="success-title">She Said Yes! 💖</h2>
         <p id="success-message">You've made me the happiest person.</p>
@@ -383,6 +566,51 @@
         const $ = id => document.getElementById(id);
         const $$ = sel => document.querySelectorAll(sel);
         
+        // --- Progress Meter Logic ---
+        let progress = 0;
+        const checkpoints = { modal: false, appreciation: false, openWhen: false, quiz: false, games: false };
+        
+        const updateLove = () => {
+            let p = 0;
+            if (checkpoints.modal) p += 20;
+            if (checkpoints.appreciation) p += 20;
+            if (checkpoints.openWhen) p += 20;
+            if (checkpoints.quiz) p += 20;
+            if (checkpoints.games) p += 20;
+            $('love-fill').style.width = p + '%';
+            if (p >= 100) $('love-msg').style.opacity = 1;
+        };
+
+        // --- Intro Sequence ---
+        const introText = $('intro-text');
+        const introOverlay = $('intro-overlay');
+        const modal = $('landing-modal');
+        const messages = ["Hey...", "I made something for you.", "Just wait a second..."];
+        let msgIdx = 0;
+
+        function playIntro() {
+            if (msgIdx < messages.length) {
+                // Fade out old
+                introText.style.opacity = 0;
+                setTimeout(() => {
+                    // Change text and fade in new
+                    introText.textContent = messages[msgIdx];
+                    introText.style.opacity = 1;
+                    msgIdx++;
+                    setTimeout(playIntro, 2500); // 2.5s per message
+                }, 500);
+            } else {
+                // Done
+                introOverlay.style.opacity = 0;
+                setTimeout(() => {
+                    introOverlay.style.display = 'none';
+                    modal.classList.add('visible');
+                    document.body.classList.add('no-scroll');
+                }, 1000);
+            }
+        }
+        playIntro();
+
         // --- Hearts ---
         for(let i=0; i<15; i++) {
             let h = document.createElement('div');
@@ -396,14 +624,73 @@
 
         // --- Modal & Scroll ---
         $('open-letter-btn').onclick = () => { $('modal-initial').style.display = 'none'; $('modal-text').style.display = 'block'; };
-        $('close-modal-btn').onclick = () => { $('landing-modal').classList.remove('visible'); document.body.classList.remove('no-scroll'); };
+        $('close-modal-btn').onclick = () => { 
+            $('landing-modal').classList.remove('visible'); 
+            document.body.classList.remove('no-scroll');
+            checkpoints.modal = true; updateLove();
+        };
 
-        const obs = new IntersectionObserver(e => e.forEach(en => en.isIntersecting && en.target.classList.add('visible')), {threshold:0.15});
+        const obs = new IntersectionObserver(e => e.forEach(en => {
+            if (en.isIntersecting) {
+                en.target.classList.add('visible');
+                if(en.target.id === 'appreciation' && !checkpoints.appreciation) {
+                    checkpoints.appreciation = true; updateLove();
+                }
+            }
+        }), {threshold:0.15});
         $$('section').forEach(s => s.id !== 'hero' && obs.observe(s));
+
+        // --- Heartbeat Logic (Web Audio API) ---
+        function playHeartbeat() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = ctx.currentTime;
+                const masterGain = ctx.createGain();
+                masterGain.connect(ctx.destination);
+                masterGain.gain.setValueAtTime(0.5, now);
+
+                const playThud = (time, freq, decay) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.frequency.setValueAtTime(freq, time);
+                    osc.frequency.exponentialRampToValueAtTime(freq * 0.5, time + decay);
+                    gain.gain.setValueAtTime(1, time);
+                    gain.gain.exponentialRampToValueAtTime(0.01, time + decay);
+                    osc.connect(gain);
+                    gain.connect(masterGain);
+                    osc.start(time);
+                    osc.stop(time + decay);
+                };
+
+                for (let i = 0; i < 4; i++) { // 2 beats per second * 2 sec (approx 4 beats)
+                    playThud(now + i, 60, 0.1); 
+                    playThud(now + i + 0.15, 50, 0.1);
+                }
+                setTimeout(() => ctx.close(), 4000);
+            } catch(e) { console.log("Audio not supported"); }
+        }
 
         // --- Games ---
         let gamesDone = 0;
-        const markDone = () => ++gamesDone >= 2 && setTimeout(() => { $('final-cue').style.display='block'; setTimeout(()=>$('final-cue').style.opacity=1, 100); }, 500);
+        const markDone = () => {
+            gamesDone++;
+            if (gamesDone >= 2) {
+                checkpoints.games = true; updateLove();
+                // Heartbeat sync moment
+                setTimeout(() => {
+                    const hbOverlay = $('heartbeat-overlay');
+                    hbOverlay.classList.add('active');
+                    document.body.classList.add('no-scroll');
+                    playHeartbeat();
+                    setTimeout(() => {
+                        hbOverlay.classList.remove('active');
+                        document.body.classList.remove('no-scroll');
+                        $('final-cue').style.display = 'block';
+                        setTimeout(() => $('final-cue').style.opacity = 1, 100);
+                    }, 4000);
+                }, 500);
+            }
+        };
 
         // Memory
         const icons = ['💛', '🌸', '✨', '🫂', '🌙', '☕', '❤️', '🌻'];
@@ -472,7 +759,26 @@
 
         // --- Interaction ---
         $('think-btn').onclick = () => { $('think-overlay').classList.add('active'); document.body.classList.add('no-scroll'); };
-        $('yes-btn').onclick = () => { $('success-overlay').classList.add('active'); document.body.classList.add('no-scroll'); startConfetti(); };
+        $('yes-btn').onclick = () => { 
+            $('success-overlay').classList.add('active'); 
+            document.body.classList.add('no-scroll'); 
+            startConfetti();
+            
+            // Allow scrolling after 3 seconds
+            setTimeout(() => {
+                $('success-overlay').classList.add('fade-out');
+                document.body.classList.remove('no-scroll');
+                
+                // Unlock secret message
+                const secretCard = $('secret-card');
+                if(secretCard) {
+                    secretCard.classList.add('unlocked');
+                    setTimeout(() => {
+                        secretCard.scrollIntoView({behavior: 'smooth', block: 'center'});
+                    }, 1000);
+                }
+            }, 3000);
+        };
 
         // --- Confetti ---
         const cvs = $('confetti-canvas'), ctx = cvs.getContext('2d'), parts = [];
@@ -496,7 +802,7 @@
             loop();
         };
 
-        // --- Firebase & Music ---
+        // --- Firebase & Dynamic Content ---
         firebase.initializeApp({
             apiKey: "AIzaSyBIyIXYNvVhJnSK58rB29K9n7SNnbaoqnc",
             authDomain: "proposal-apoorva-sarvagy.firebaseapp.com",
@@ -519,7 +825,87 @@
                     $('signature').textContent = "- " + (d.yourName || "Me");
                     $('success-title').textContent = "She Said Yes! 💖";
                     $('success-message').textContent = "You've made me the happiest person, " + (d.herName||"you") + ".";
+                    
+                    if (d.secretMessage) {
+                        $('secret-section').style.display = 'block';
+                        $('secret-content').textContent = d.secretMessage;
+                    }
 
+                    // Open When
+                    if (d.openWhen) {
+                        $('open-when').style.display = 'block';
+                        const ow = d.openWhen;
+                        const owContainer = $('open-when-container');
+                        const items = [
+                            { t: "Open when you're sad", c: ow.sad || "Remember that you are loved beyond measure. Bad days don't last, but my support for you does." },
+                            { t: "Open when you miss me", c: ow.miss || "I'm probably missing you too, right this second. Close your eyes, I'm right there with you." },
+                            { t: "Open when you overthink", c: ow.overthink || "Breathe. You are doing amazing. Everything is going to be okay. I've got you." }
+                        ];
+                        items.forEach(item => {
+                            const el = document.createElement('div');
+                            el.className = 'open-when-card';
+                            el.innerHTML = `
+                                <div class="envelope-body"></div>
+                                <div class="envelope-flap"></div>
+                                <div class="envelope-bg"></div>
+                                <div class="letter-title">${item.t}</div>
+                                <div class="letter-paper">${item.c}</div>
+                            `;
+                            el.onclick = (e) => {
+                                e.stopPropagation();
+                                const isActive = el.classList.contains('active');
+                                // Close all
+                                document.querySelectorAll('.open-when-card').forEach(c => c.classList.remove('active'));
+                                // Toggle current
+                                if (!isActive) {
+                                    el.classList.add('active');
+                                    if(!checkpoints.openWhen) { checkpoints.openWhen = true; updateLove(); }
+                                }
+                            };
+                            owContainer.appendChild(el);
+                        });
+                    }
+
+                    // Quiz
+                    if (d.quiz) {
+                        $('quiz-section').style.display = 'block';
+                        const qContainer = $('quiz-container');
+                        const qs = [d.quiz.question1, d.quiz.question2, d.quiz.question3];
+                        const defaultQs = [
+                            { text: "What's my favorite thing about you?", options: ["Your Smile", "Your Eyes", "Your Laugh", "Everything"] },
+                            { text: "Where is our dream date?", options: ["Beach", "Mountains", "Cozy Cafe", "Rooftop Dinner"] },
+                            { text: "How much do I love you?", options: ["A lot", "To the moon", "Infinity", "Beyond words"] }
+                        ];
+
+                        qs.forEach((q, i) => {
+                            const data = q || defaultQs[i];
+                            const card = document.createElement('div');
+                            card.className = 'quiz-card';
+                            card.innerHTML = `<div class="quiz-question">${i+1}. ${data.text}</div><div class="quiz-options"></div>`;
+                            const optContainer = card.querySelector('.quiz-options');
+                            data.options.forEach(opt => {
+                                const btn = document.createElement('div');
+                                btn.className = 'quiz-option';
+                                btn.innerText = opt;
+                                btn.onclick = () => {
+                                    Array.from(optContainer.children).forEach(c => c.classList.remove('selected'));
+                                    btn.classList.add('selected');
+                                    checkQuiz();
+                                };
+                                optContainer.appendChild(btn);
+                            });
+                            qContainer.appendChild(card);
+                        });
+
+                        function checkQuiz() {
+                            if (document.querySelectorAll('.quiz-option.selected').length === 3) {
+                                $('quiz-result').style.display = 'block';
+                                if(!checkpoints.quiz) { checkpoints.quiz = true; updateLove(); }
+                            }
+                        }
+                    }
+
+                    // Music
                     if(d.hasMusic) {
                         const allPlayers = document.querySelectorAll('.music-card');
                         const allAudios = [];
@@ -563,22 +949,11 @@
 
                             btn.onclick = () => {
                                 if(audio.paused) {
-                                    // Pause all others
-                                    allAudios.forEach(a => {
-                                        if(a !== audio) {
-                                            a.pause();
-                                            // Find button for other audio and reset
-                                        }
-                                    });
-                                    allPlayers.forEach(c => {
-                                        if(c !== card) c.querySelector('.play-btn').textContent = "▶️";
-                                    });
-
-                                    audio.play();
-                                    btn.textContent = "⏸️";
+                                    allAudios.forEach(a => { if(a !== audio) a.pause(); });
+                                    allPlayers.forEach(c => { if(c !== card) c.querySelector('.play-btn').textContent = "▶️"; });
+                                    audio.play(); btn.textContent = "⏸️";
                                 } else {
-                                    audio.pause();
-                                    btn.textContent = "▶️";
+                                    audio.pause(); btn.textContent = "▶️";
                                 }
                             };
 
@@ -596,9 +971,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
