@@ -36,9 +36,45 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--blush-pink);
             z-index: 5000; font-family: var(--font-body); transition: transform 0.3s;
         }
-        .meter-title { font-size: 0.9rem; font-weight: 700; color: var(--warm-plum); margin-bottom: 8px; text-align: center; }
+        .meter-title { font-size: 0.9rem; font-weight: 700; color: var(--warm-plum); margin-bottom: 8px; text-align: center; transition: color 0.3s; }
         .meter-bar { height: 8px; background: #FFE5EC; border-radius: 10px; overflow: hidden; }
         .meter-fill { height: 100%; width: 0%; background: linear-gradient(to right, #F8C8DC, #E75480); transition: width 0.6s ease; }
+
+        /* Sticker Panel */
+        #sticker-panel {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 4000;
+        }
+        .sticker-btn {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--blush-pink);
+            box-shadow: 0 8px 25px rgba(231,84,128,0.2);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s;
+        }
+        .sticker-btn:hover { transform: scale(1.15); background: white; }
+        .floating-sticker {
+            position: fixed;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 4500;
+            animation: floatUpSticker 2s ease-out forwards;
+        }
+        @keyframes floatUpSticker {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-150px) rotate(20deg); opacity: 0; }
+        }
 
         /* Sparkle Trail */
         .sparkle {
@@ -65,7 +101,7 @@
         section { padding: 80px 0; opacity: 0; transform: translateY(30px); transition: 1s ease; }
         section.visible { opacity: 1; transform: translateY(0); }
 
-        .card, .pickup-card, .game-wrapper, .think-card, .content-wrapper, .music-card, .quiz-card, .secret-card {
+        .card, .pickup-card, .game-wrapper, .think-card, .content-wrapper, .music-card, .quiz-card, .secret-card, .comp-card {
             background: white; border-radius: 20px; box-shadow: var(--shadow-soft); transition: transform 0.3s ease;
         }
         .card { padding: 30px; }
@@ -143,7 +179,7 @@
         .pickup-card { background: var(--light-peach); padding: 25px; text-align: center; font-size: 1.1rem; border: 1px solid var(--blush-pink); }
         .pickup-card:hover { background: var(--blush-pink); transform: scale(1.05) rotate(1deg); }
 
-        /* Quiz Section */
+        /* Quiz Section (Default Firebase One) */
         #quiz-section { background: var(--creamy-white); }
         .quiz-container { max-width: 600px; margin: 0 auto; }
         .quiz-card { padding: 30px; margin-bottom: 25px; border: 1px solid var(--light-peach); }
@@ -156,6 +192,26 @@
         .quiz-option:hover { background: var(--light-peach); }
         .quiz-option.selected { background: var(--soft-rose); color: white; border-color: var(--soft-rose); }
         #quiz-result { text-align: center; font-size: 1.5rem; color: var(--soft-rose); margin-top: 30px; display: none; font-family: var(--font-hand); }
+
+        /* Compatibility Quiz (New Feature) */
+        #compatibility-section { background: var(--gradient-romantic); padding: 60px 0; }
+        .comp-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            border: 1px solid var(--blush-pink);
+            box-shadow: 0 8px 25px rgba(125, 78, 141, 0.1);
+            padding: 40px;
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .comp-option {
+            background: white; border: 1px solid var(--blush-pink); padding: 15px;
+            margin-bottom: 10px; border-radius: 15px; cursor: pointer;
+            transition: all 0.3s; font-size: 1rem; color: var(--text-charcoal);
+        }
+        .comp-option:hover { background: var(--light-peach); transform: translateX(5px); }
+        .comp-option.active { background: var(--soft-rose); color: white; border-color: var(--soft-rose); transform: scale(1.02); }
 
         /* Reasons */
         .reasons-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
@@ -210,15 +266,16 @@
         }
         #intro-text { 
             font-family: var(--font-hand); 
-            font-size: 2rem; 
+            font-size: 2.5rem; 
             color: var(--warm-plum); 
             text-shadow: 0 0 20px rgba(231, 84, 128, 0.3); 
             text-align: center; 
             padding: 20px;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out; 
+            transform: scale(0.9);
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out; 
         }
-        @media (min-width: 768px) { #intro-text { font-size: 2.8rem; } }
+        @media (min-width: 768px) { #intro-text { font-size: 3.5rem; } }
         
         /* Landing Modal */
         #landing-modal { background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); z-index: 3000; transition: opacity 1s; }
@@ -319,6 +376,8 @@
             .quiz-options { grid-template-columns: 1fr; }
             #interest-meter { width: 140px; top: 10px; right: 10px; padding: 10px; }
             .meter-title { font-size: 0.8rem; }
+            #sticker-panel { right: 10px; }
+            .sticker-btn { width: 40px; height: 40px; font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -332,6 +391,14 @@
         <div class="meter-bar">
             <div class="meter-fill"></div>
         </div>
+    </div>
+
+    <!-- Sticker Panel -->
+    <div id="sticker-panel">
+        <div class="sticker-btn" onclick="spawnSticker('💖')">💖</div>
+        <div class="sticker-btn" onclick="spawnSticker('✨')">✨</div>
+        <div class="sticker-btn" onclick="spawnSticker('🥺')">🥺</div>
+        <div class="sticker-btn" onclick="spawnSticker('🔥')">🔥</div>
     </div>
 
     <!-- Soft Cinematic Intro -->
@@ -461,7 +528,7 @@
         </div>
     </section>
 
-    <!-- NEW: Love Quiz Section -->
+    <!-- NEW: Love Quiz Section (From Firebase) -->
     <section id="quiz-section" style="display:none;">
         <div class="container">
             <h2 style="text-align:center; font-size: 3rem; color: var(--soft-rose); margin-bottom: 30px;">Just One Little Test...</h2>
@@ -520,6 +587,33 @@
                     <div class="music-controls"><button class="play-btn">▶️</button></div>
                     <div class="progress-container"><div class="progress-bar"></div></div>
                     <div class="time-info"><span class="curr">0:00</span><span class="dur">0:00</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Compatibility Quiz Section -->
+    <section id="compatibility-section">
+        <div class="container">
+            <h2 style="text-align:center; font-size: 3rem; color: var(--warm-plum); margin-bottom: 20px;">Let’s See If We’re Meant To Be ✨</h2>
+            <div class="comp-card">
+                <div id="comp-q1">
+                    <h3 style="margin-bottom:20px; color:var(--text-cocoa);">1. What's your idea of a perfect date? 🍷</h3>
+                    <div class="comp-option" onclick="compSelect(1, 20)">A cozy movie night in 🎥</div>
+                    <div class="comp-option" onclick="compSelect(1, 30)">A spontaneous road trip 🚗</div>
+                    <div class="comp-option" onclick="compSelect(1, 25)">A fancy dinner under the stars ✨</div>
+                </div>
+                <div id="comp-q2" style="display:none;">
+                    <h3 style="margin-bottom:20px; color:var(--text-cocoa);">2. How do you handle my bad jokes? 🤡</h3>
+                    <div class="comp-option" onclick="compSelect(2, 25)">Laugh even if they hurt 😂</div>
+                    <div class="comp-option" onclick="compSelect(2, 30)">Roast me right back 🔥</div>
+                    <div class="comp-option" onclick="compSelect(2, 20)">Roll your eyes playfully 🙄</div>
+                </div>
+                <div id="comp-q3" style="display:none;">
+                    <h3 style="margin-bottom:20px; color:var(--text-cocoa);">3. What matters most to us? ❤️</h3>
+                    <div class="comp-option" onclick="compSelect(3, 35)">Trust & Honesty 🤝</div>
+                    <div class="comp-option" onclick="compSelect(3, 30)">Fun & Adventure 🎢</div>
+                    <div class="comp-option" onclick="compSelect(3, 35)">Growing Together 🌱</div>
                 </div>
             </div>
         </div>
@@ -590,7 +684,8 @@
         // --- Progress Meter Logic ---
         let progress = 0;
         const checkpoints = { modal: false, appreciation: false, openWhen: false, quiz: false, games: false };
-        
+        let quizOverrideScore = 0;
+
         const updateLove = () => {
             let p = 0;
             if (checkpoints.modal) p += 20;
@@ -599,7 +694,10 @@
             if (checkpoints.quiz) p += 20;
             if (checkpoints.games) p += 20;
             
-            // Cap at 100
+            // If compatibility quiz is active, use that for text override, but base fill on progress
+            // However, the prompt asks to update the meter dynamically based on the quiz score.
+            // Let's blend them: The bar fills with progress, but text reacts to quiz score if present.
+            
             if(p > 100) p = 100;
 
             const fill = document.querySelector('.meter-fill');
@@ -608,15 +706,28 @@
             if(fill) fill.style.width = p + '%';
             
             let text = "Curious 😊";
-            if (p > 80) text = "Fully Interested 😍";
-            else if (p > 60) text = "Heart Racing 💓";
-            else if (p > 40) text = "Feeling It ✨";
-            else if (p > 20) text = "Smiling 💕";
+            if (quizOverrideScore > 0) {
+                 if (quizOverrideScore >= 90) text = "Soulmates Energy 💞";
+                 else if (quizOverrideScore >= 70) text = "Strong Chemistry ✨";
+                 else if (quizOverrideScore >= 50) text = "Something Special 💗";
+                 else text = "Plot Twist Romance 😉";
+            } else {
+                if (p > 80) text = "Fully Interested 😍";
+                else if (p > 60) text = "Heart Racing 💓";
+                else if (p > 40) text = "Feeling It ✨";
+                else if (p > 20) text = "Smiling 💕";
+            }
             
-            if(title) title.textContent = text;
+            if(title) {
+                title.style.opacity = 0;
+                setTimeout(() => {
+                    title.textContent = text;
+                    title.style.opacity = 1;
+                }, 150);
+            }
         };
 
-        // --- Intro Sequence ---
+        // --- Cinematic Multi-Step Intro ---
         const introText = $('intro-text');
         const introOverlay = $('intro-overlay');
         const modal = $('landing-modal');
@@ -625,26 +736,85 @@
 
         function playIntro() {
             if (msgIdx < messages.length) {
-                // Fade out old
+                // Fade out old (if any, though initially opacity is 0 in CSS, we handle it here)
                 introText.style.opacity = 0;
+                introText.style.transform = "scale(0.9)";
+                
                 setTimeout(() => {
                     // Change text and fade in new
                     introText.textContent = messages[msgIdx];
                     introText.style.opacity = 1;
+                    introText.style.transform = "scale(1)";
                     msgIdx++;
-                    setTimeout(playIntro, 2500); // 2.5s per message
-                }, 500);
+                    
+                    // Duration to stay on screen before fading out next
+                    setTimeout(playIntro, 2500); 
+                }, 1000); // Wait for fade out transition (1s)
             } else {
-                // Done
-                introOverlay.style.opacity = 0;
+                // Done sequence
                 setTimeout(() => {
-                    introOverlay.style.display = 'none';
-                    modal.classList.add('visible');
-                    document.body.classList.add('no-scroll');
-                }, 1000);
+                    introOverlay.style.opacity = 0;
+                    setTimeout(() => {
+                        introOverlay.style.display = 'none';
+                        modal.classList.add('visible');
+                        document.body.classList.add('no-scroll');
+                    }, 1000);
+                }, 500);
             }
         }
         playIntro();
+
+        // --- Sticker Logic ---
+        function spawnSticker(emoji) {
+            const s = document.createElement('div');
+            s.className = 'floating-sticker';
+            s.innerText = emoji;
+            // Randomize start X slightly around the button press if possible, 
+            // but fixed panel makes it easier to just spawn near bottom right.
+            const panel = $('sticker-panel');
+            const rect = panel.getBoundingClientRect();
+            
+            // Randomize position slightly to left of panel
+            const randomX = Math.random() * 50 + 20;
+            s.style.right = (rect.width + randomX) + 'px';
+            s.style.top = (Math.random() * (window.innerHeight - 200) + 100) + 'px';
+            
+            document.body.appendChild(s);
+            
+            // Limit stickers
+            const stickers = document.querySelectorAll('.floating-sticker');
+            if(stickers.length > 15) stickers[0].remove();
+
+            setTimeout(() => s.remove(), 2000);
+        }
+
+        // --- Compatibility Quiz Logic ---
+        let compScore = 0;
+        function compSelect(qNum, points) {
+            compScore += points;
+            // Highlight selected
+            const currentDiv = document.getElementById('comp-q' + qNum);
+            // Hide current, show next
+            setTimeout(() => {
+                currentDiv.style.display = 'none';
+                const next = document.getElementById('comp-q' + (qNum + 1));
+                if(next) {
+                    next.style.display = 'block';
+                    next.style.animation = 'fadeIn 0.5s';
+                } else {
+                    // Finished
+                    quizOverrideScore = compScore; // Trigger meter text override
+                    updateLove();
+                    const card = document.querySelector('.comp-card');
+                    card.innerHTML = `<h3 style="font-size:2rem; color:var(--soft-rose);">Score: ${compScore}% ❤️</h3><p>I knew we were a match.</p>`;
+                }
+            }, 300);
+            
+            // Simulate immediate meter reaction
+            quizOverrideScore = compScore; 
+            updateLove();
+        }
+
 
         // --- Hearts ---
         for(let i=0; i<15; i++) {
@@ -677,49 +847,47 @@
 
         // --- Heartbeat Logic (Web Audio API) ---
         function playHeartbeat() {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const now = ctx.currentTime;
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const now = ctx.currentTime;
 
-    const masterGain = ctx.createGain();
-    masterGain.connect(ctx.destination);
-    masterGain.gain.setValueAtTime(0.8, now); // 🔊 Increase volume (0.3 → 0.8)
+            const masterGain = ctx.createGain();
+            masterGain.connect(ctx.destination);
+            masterGain.gain.setValueAtTime(0.8, now); // 🔊 Increase volume (0.3 → 0.8)
 
-    function thud(time, freq, duration) {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+            function thud(time, freq, duration) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
 
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(freq, time);
-        osc.frequency.exponentialRampToValueAtTime(freq * 0.6, time + duration);
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(freq, time);
+                osc.frequency.exponentialRampToValueAtTime(freq * 0.6, time + duration);
 
-        gain.gain.setValueAtTime(1, time);
-        gain.gain.exponentialRampToValueAtTime(0.01, time + duration);
+                gain.gain.setValueAtTime(1, time);
+                gain.gain.exponentialRampToValueAtTime(0.01, time + duration);
 
-        osc.connect(gain);
-        gain.connect(masterGain);
+                osc.connect(gain);
+                gain.connect(masterGain);
 
-        osc.start(time);
-        osc.stop(time + duration);
-    }
+                osc.start(time);
+                osc.stop(time + duration);
+            }
 
-    const pairCount = 4;      // number of heart pairs
-    const pairInterval = 1.1; // gap between pairs
-    const shortGap = 0.15;    // gap inside pair (between lub & dub)
+            const pairCount = 4;      // number of heart pairs
+            const pairInterval = 1.1; // gap between pairs
+            const shortGap = 0.15;    // gap inside pair (between lub & dub)
 
-    for (let i = 0; i < pairCount; i++) {
-        const baseTime = now + i * pairInterval;
+            for (let i = 0; i < pairCount; i++) {
+                const baseTime = now + i * pairInterval;
 
-        // LUB (longer)
-        thud(baseTime, 65, 0.18);
+                // LUB (longer)
+                thud(baseTime, 65, 0.18);
 
-        // DUB (slightly shorter, 50ms less)
-        thud(baseTime + shortGap, 55, 0.13);
-    }
+                // DUB (slightly shorter, 50ms less)
+                thud(baseTime + shortGap, 55, 0.13);
+            }
 
-    // Close audio context after playback
-    setTimeout(() => ctx.close(), pairCount * pairInterval * 1000 + 500);
-
-
+            // Close audio context after playback
+            setTimeout(() => ctx.close(), pairCount * pairInterval * 1000 + 500);
         }
 
         // --- Games ---
@@ -936,7 +1104,7 @@
                         });
                     }
 
-                    // Quiz
+                    // Quiz (Firebase Data)
                     if (d.quiz) {
                         $('quiz-section').style.display = 'block';
                         const qContainer = $('quiz-container');
