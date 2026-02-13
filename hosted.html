@@ -29,7 +29,7 @@
         .abs-fill { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
         h1, h2, h3 { font-family: var(--font-hand); color: var(--text-cocoa); }
 
-        /* Interest Meter (Replacing Love Meter) */
+        /* Interest Meter */
         #interest-meter {
             position: fixed; top: 20px; right: 20px; width: 180px; padding: 15px;
             background: white; border-radius: 20px;
@@ -42,33 +42,20 @@
 
         /* Sticker Panel */
         #sticker-panel {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 4000;
+            position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 15px; z-index: 4000;
         }
         .sticker-btn {
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(5px);
-            border: 1px solid var(--blush-pink);
-            box-shadow: 0 8px 25px rgba(231,84,128,0.2);
-            font-size: 1.5rem;
-            cursor: pointer;
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(5px);
+            border: 1px solid var(--blush-pink); box-shadow: 0 8px 25px rgba(231,84,128,0.2);
+            font-size: 1.5rem; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             transition: transform 0.2s;
         }
         .sticker-btn:hover { transform: scale(1.15); background: white; }
         .floating-sticker {
-            position: fixed;
-            font-size: 2rem;
-            pointer-events: none;
-            z-index: 4500;
+            position: fixed; font-size: 2rem; pointer-events: none; z-index: 4500;
             animation: floatUpSticker 2s ease-out forwards;
         }
         @keyframes floatUpSticker {
@@ -98,14 +85,48 @@
 
         /* Layout & Sections */
         .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
-        section { padding: 80px 0; opacity: 0; transform: translateY(30px); transition: 1s ease; }
-        section.visible { opacity: 1; transform: translateY(0); }
-
-        .card, .pickup-card, .game-wrapper, .think-card, .content-wrapper, .music-card, .quiz-card, .secret-card, .comp-card {
-            background: white; border-radius: 20px; box-shadow: var(--shadow-soft); transition: transform 0.3s ease;
+        
+        section { 
+            padding: 80px 0; 
+            opacity: 0; 
+            transform: translateY(30px) scale(0.98); 
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: opacity, transform;
         }
+        section.visible { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+        }
+
+        /* Parallax Background Support */
+        #mini-games, #final-decision, #secret-section {
+            background-size: 100% 120%;
+            background-repeat: no-repeat;
+            background-position: center center;
+            will-change: background-position;
+        }
+
+        /* Breathing Animation */
+        @keyframes breathing {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.005); } 
+            100% { transform: scale(1); }
+        }
+
+        .card, .pickup-card, .game-wrapper, .think-card, .content-wrapper, .quiz-card, .secret-card, .comp-card {
+            background: white; border-radius: 20px; box-shadow: var(--shadow-soft); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: breathing 6s ease-in-out infinite;
+        }
+        
+        /* Pause breathing on hover */
+        .card:hover, .pickup-card:hover, .game-wrapper:hover, .think-card:hover, .content-wrapper:hover, .quiz-card:hover, .secret-card:hover, .comp-card:hover {
+            animation-play-state: paused;
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(125, 78, 141, 0.2);
+        }
+
         .card { padding: 30px; }
-        .card:hover { transform: translateY(-5px); }
 
         /* Hero */
         #hero { min-height: 100vh; flex-direction: column; text-align: center; background: radial-gradient(circle, var(--light-peach) 0%, transparent 70%); display: flex; justify-content: center; align-items: center; }
@@ -179,7 +200,7 @@
         .pickup-card { background: var(--light-peach); padding: 25px; text-align: center; font-size: 1.1rem; border: 1px solid var(--blush-pink); }
         .pickup-card:hover { background: var(--blush-pink); transform: scale(1.05) rotate(1deg); }
 
-        /* Quiz Section (Default Firebase One) */
+        /* Quiz Section */
         #quiz-section { background: var(--creamy-white); }
         .quiz-container { max-width: 600px; margin: 0 auto; }
         .quiz-card { padding: 30px; margin-bottom: 25px; border: 1px solid var(--light-peach); }
@@ -193,7 +214,7 @@
         .quiz-option.selected { background: var(--soft-rose); color: white; border-color: var(--soft-rose); }
         #quiz-result { text-align: center; font-size: 1.5rem; color: var(--soft-rose); margin-top: 30px; display: none; font-family: var(--font-hand); }
 
-        /* Compatibility Quiz (New Feature) */
+        /* Compatibility Quiz */
         #compatibility-section { background: var(--gradient-romantic); padding: 60px 0; }
         .comp-card {
             background: rgba(255, 255, 255, 0.95);
@@ -333,40 +354,6 @@
         .think-card { padding: 40px; max-width: 600px; border: 2px solid var(--muted-lavender); text-align: center; }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* New Inline Music Player */
-        .music-card {
-            display: none; /* Hidden by default, shown via JS if hasMusic */
-            width: 100%;
-            max-width: 400px;
-            margin: 30px auto 0;
-            padding: 20px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, #fff0f5, #fff);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            border: 1px solid var(--blush-pink);
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .music-info { margin-bottom: 15px; }
-        .music-title { font-weight: 700; color: var(--warm-plum); font-size: 1.1rem; }
-        .music-artist { font-size: 0.9rem; color: #888; }
-        
-        .music-controls { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 15px; }
-        .play-btn { 
-            width: 50px; height: 50px; border-radius: 50%; border: none; 
-            background: var(--soft-rose); color: white; font-size: 1.2rem; 
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(231, 84, 128, 0.3); transition: transform 0.2s;
-        }
-        .play-btn:hover { transform: scale(1.1); }
-
-        .progress-container { width: 100%; height: 5px; background: #e0e0e0; border-radius: 5px; cursor: pointer; position: relative; }
-        .progress-bar { height: 100%; background: var(--soft-rose); border-radius: 5px; width: 0%; transition: width 0.1s linear; }
-        
-        .time-info { width: 100%; display: flex; justify-content: space-between; font-size: 0.8rem; color: #666; margin-top: 5px; }
-
         @media (max-width: 600px) {
             #hero h1 { font-size: 3.5rem; }
             #pickup-lines h2, #reasons h2, #final-decision h2 { font-size: 2.5rem; }
@@ -445,17 +432,6 @@
                 <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.5rem;">To My Safe Space</h2>
                 <p id="appreciation-text" style="white-space: pre-line;">Loading appreciation...</p>
             </div>
-            
-            <!-- Music Player 1: Khat -->
-            <div class="music-card" data-src="assets/music/song-1.mp3">
-                <div class="music-info">
-                    <div class="music-title">Khat (Acoustic)</div>
-                    <div class="music-artist">For Us ❤️</div>
-                </div>
-                <div class="music-controls"><button class="play-btn">▶️</button></div>
-                <div class="progress-container"><div class="progress-bar"></div></div>
-                <div class="time-info"><span class="curr">0:00</span><span class="dur">0:00</span></div>
-            </div>
         </div>
     </section>
 
@@ -478,17 +454,6 @@
                 <div class="pickup-card">"Are you made of copper and tellurium? Because you're Cu-Te." 🧪</div>
                 <div class="pickup-card">"Is your name Wi-Fi? Because I'm feeling a really strong connection." 📶</div>
                 <div class="pickup-card">"I'm not a photographer, but I can definitely picture us together." 🖼️</div>
-            </div>
-
-            <!-- Music Player 2: Maand -->
-            <div class="music-card" data-src="assets/music/song-2.mp3">
-                <div class="music-info">
-                    <div class="music-title">Maand</div>
-                    <div class="music-artist">The Vibe ✨</div>
-                </div>
-                <div class="music-controls"><button class="play-btn">▶️</button></div>
-                <div class="progress-container"><div class="progress-bar"></div></div>
-                <div class="time-info"><span class="curr">0:00</span><span class="dur">0:00</span></div>
             </div>
         </div>
     </section>
@@ -513,17 +478,6 @@
                 <p id="confession-greeting">Dear ...</p>
                 <p id="confession-text" style="white-space: pre-line;">Loading confession...</p>
                 <div class="signature" id="signature">- ...</div>
-
-                <!-- Music Player 3: Finding Her -->
-                <div class="music-card" data-src="assets/music/song-4.mp3" style="background: rgba(255,255,255,0.7);">
-                    <div class="music-info">
-                        <div class="music-title">Finding Her</div>
-                        <div class="music-artist">My Heartbeat 💓</div>
-                    </div>
-                    <div class="music-controls"><button class="play-btn">▶️</button></div>
-                    <div class="progress-container"><div class="progress-bar"></div></div>
-                    <div class="time-info"><span class="curr">0:00</span><span class="dur">0:00</span></div>
-                </div>
             </div>
         </div>
     </section>
@@ -577,17 +531,6 @@
 
             <div class="final-cue" id="final-cue" style="display:none; text-align:center; margin-top:40px; opacity:0; transition:1s">
                 <h3 style="color: var(--warm-plum);">Okay… I think you’re ready for the final question. 👇</h3>
-                
-                <!-- Music Player 4: Dooron Dooron -->
-                <div class="music-card" data-src="assets/music/song-3.mp3">
-                    <div class="music-info">
-                        <div class="music-title">Dooron Dooron</div>
-                        <div class="music-artist">Just a moment... 🕰️</div>
-                    </div>
-                    <div class="music-controls"><button class="play-btn">▶️</button></div>
-                    <div class="progress-container"><div class="progress-bar"></div></div>
-                    <div class="time-info"><span class="curr">0:00</span><span class="dur">0:00</span></div>
-                </div>
             </div>
         </div>
     </section>
@@ -624,17 +567,6 @@
             <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path></svg>
         </div>
         <div class="container">
-            <!-- Music Player 5: Meri Banogi Kya -->
-            <div class="music-card" data-src="assets/music/song-5.mp3" style="margin-bottom: 30px; background: rgba(255,255,255,0.6);">
-                <div class="music-info">
-                    <div class="music-title">Meri Banogi Kya?</div>
-                    <div class="music-artist">The Final Question 💍</div>
-                </div>
-                <div class="music-controls"><button class="play-btn">▶️</button></div>
-                <div class="progress-container"><div class="progress-bar"></div></div>
-                <div class="time-info"><span class="curr">0:00</span><span class="dur">0:00</span></div>
-            </div>
-
             <h2>Will You Be My Valentine?</h2>
             <div class="button-group">
                 <button class="btn btn-yes" id="yes-btn">YES ❤️</button>
@@ -828,13 +760,11 @@
         }
 
         // --- Modal & Scroll ---
-        $('open-letter-btn').onclick = () => { $('modal-initial').style.display = 'none'; $('modal-text').style.display = 'block'; };
+        $('open-letter-btn').onclick = () => { $('modal-initial').style.display = 'none'; $('modal-text').style.display = 'block'; playMusicWithFade();};
         $('close-modal-btn').onclick = () => { 
             $('landing-modal').classList.remove('visible'); 
             document.body.classList.remove('no-scroll');
-            checkpoints.modal = true; 
-            updateLove();
-            playFinalSong();
+            checkpoints.modal = true; updateLove();
         };
 
         const obs = new IntersectionObserver(e => e.forEach(en => {
@@ -1042,6 +972,48 @@
             setTimeout(() => s.remove(), 600);
         });
 
+        // --- Parallax Effect ---
+        const parallaxSections = document.querySelectorAll('#mini-games, #final-decision, #secret-section');
+        let ticking = false;
+
+        function updateParallax() {
+            // Disable on mobile/touch
+            if (window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches) {
+                return;
+            }
+            
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            
+            parallaxSections.forEach(sec => {
+                const rect = sec.getBoundingClientRect();
+                const center = windowHeight / 2;
+                const secCenter = rect.top + (rect.height / 2);
+                
+                // Calculate distance from center of viewport
+                const dist = secCenter - center;
+                
+                // Only animate if somewhat visible
+                if (rect.top < windowHeight && rect.bottom > 0) {
+                    // Subtle movement (max 40px)
+                    const speed = 0.05; 
+                    const offset = dist * speed * -1; // Invert for depth
+                    const limited = Math.max(-40, Math.min(40, offset));
+                    
+                    sec.style.backgroundPositionY = `calc(50% + ${limited}px)`;
+                }
+            });
+            
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        }, { passive: true });
+
         // --- Firebase & Dynamic Content ---
         firebase.initializeApp({
             apiKey: "AIzaSyBIyIXYNvVhJnSK58rB29K9n7SNnbaoqnc",
@@ -1145,103 +1117,34 @@
                         }
                     }
 
-                    // Music
-                    if(d.hasMusic) {
-                        const allPlayers = document.querySelectorAll('.music-card');
-                        const allAudios = [];
-
-                        allPlayers.forEach(card => {
-                            card.style.display = 'flex';
-                            const src = card.getAttribute('data-src');
-                            const audio = new Audio(src);
-                            allAudios.push(audio);
-                            
-                            const btn = card.querySelector('.play-btn');
-                            const bar = card.querySelector('.progress-bar');
-                            const container = card.querySelector('.progress-container');
-                            const currTime = card.querySelector('.curr');
-                            const durTime = card.querySelector('.dur');
-                            
-                            audio.volume = 0.4;
-
-                            const formatTime = (t) => {
-                                let m = Math.floor(t / 60) || 0;
-                                let s = Math.floor(t % 60) || 0;
-                                return m + ":" + (s < 10 ? "0" : "") + s;
-                            };
-
-                            audio.addEventListener('loadedmetadata', () => {
-                                durTime.textContent = formatTime(audio.duration);
-                            });
-                            
-                            audio.addEventListener('timeupdate', () => {
-                                if(audio.duration) {
-                                    const pct = (audio.currentTime / audio.duration) * 100;
-                                    bar.style.width = pct + "%";
-                                    currTime.textContent = formatTime(audio.currentTime);
-                                }
-                            });
-
-                            audio.addEventListener('ended', () => {
-                                btn.textContent = "▶️";
-                                bar.style.width = "0%";
-                            });
-
-                            btn.onclick = () => {
-                                if(audio.paused) {
-                                    allAudios.forEach(a => { if(a !== audio) a.pause(); });
-                                    allPlayers.forEach(c => { if(c !== card) c.querySelector('.play-btn').textContent = "▶️"; });
-                                    audio.play(); btn.textContent = "⏸️";
-                                } else {
-                                    audio.pause(); btn.textContent = "▶️";
-                                }
-                            };
-
-                            container.onclick = (e) => {
-                                const w = container.clientWidth;
-                                const x = e.offsetX;
-                                const dur = audio.duration;
-                                audio.currentTime = (x / w) * dur;
-                            };
-                        });
-                    }
                 } else document.body.innerHTML = 'Page not found.';
             }).catch(e => document.body.innerHTML = 'Error loading.');
         } else document.body.innerHTML = 'Page not found.';
-        function playFinalSong() {
-    // Find the last music card inside final-decision
-    const finalCard = document.querySelector('#final-decision .music-card');
-    if (!finalCard) return;
-
-    const src = finalCard.getAttribute('data-src');
-    if (!src) return;
-
-    // If audio already created, reuse it
-    if (!finalCard._audio) {
-        finalCard._audio = new Audio(src);
-        finalCard._audio.volume = 0.6;   // adjust if needed
-        finalCard._audio.loop = true;    // 🔁 loop
-    }
-
-    const audio = finalCard._audio;
+function playMusicWithFade() {
+    const audio = document.getElementById("bgMusic");
 
     audio.volume = 0;
-audio.play().catch(() => {});
+    audio.play();
 
-let fade = 0;
-const interval = setInterval(() => {
-    fade += 0.02;
-    audio.volume = Math.min(fade, 0.6);
-    if (fade >= 0.6) clearInterval(interval);
-}, 100);
+    const fadeDuration = 4000; // 4 seconds
+    const fadeInterval = 50;
+    const steps = fadeDuration / fadeInterval;
+    let currentStep = 0;
 
-    
-    // Update play button icon
-    const btn = finalCard.querySelector('.play-btn');
-    if (btn) btn.textContent = "⏸️";
+    const fade = setInterval(() => {
+        currentStep++;
+        audio.volume = Math.min(currentStep / steps, 1);
+
+        if (currentStep >= steps) {
+            clearInterval(fade);
+        }
+    }, fadeInterval);
 }
 
     </script>
+<audio id="bgMusic" loop>
+    <source src="assets/music/song-4.mp3" type="audio/mp3">
+</audio>
+
 </body>
 </html>
-
