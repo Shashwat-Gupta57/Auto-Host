@@ -325,19 +325,6 @@
                 </div>
             </div>
 
-            <!-- Music Toggle -->
-            <div class="section-title">🎵 Add Background Music?</div>
-            <div class="toggle-group">
-                <label class="radio-label">
-                    <input type="radio" name="musicOption" value="yes" checked>
-                    Yes, include romantic music players ❤️
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="musicOption" value="no">
-                    No, keep it silent
-                </label>
-            </div>
-
             <!-- Open When Toggle -->
             <div class="section-title">💌 Include Open When Letters?</div>
             <div class="toggle-group">
@@ -674,7 +661,6 @@
             // Gather Data
             const yourName = document.getElementById('yourName').value.trim();
             const herName = document.getElementById('herName').value.trim();
-            const hasMusic = document.querySelector('input[name="musicOption"]:checked').value === 'yes';
             
             const getData = (type) => {
                 const isCustom = document.querySelector(`input[name="${type}Option"][value="custom"]`).checked;
@@ -684,7 +670,6 @@
             const data = {
                 yourName,
                 herName,
-                hasMusic,
                 landingMessage: getData('landing'),
                 appreciation: getData('appreciation'),
                 confession: getData('confession'),
@@ -747,4 +732,3 @@
     </script>
 </body>
 </html>
-
