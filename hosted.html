@@ -832,7 +832,9 @@
         $('close-modal-btn').onclick = () => { 
             $('landing-modal').classList.remove('visible'); 
             document.body.classList.remove('no-scroll');
-            checkpoints.modal = true; updateLove();
+            checkpoints.modal = true; 
+            updateLove();
+            playFinalSong();
         };
 
         const obs = new IntersectionObserver(e => e.forEach(en => {
@@ -1206,6 +1208,40 @@
                 } else document.body.innerHTML = 'Page not found.';
             }).catch(e => document.body.innerHTML = 'Error loading.');
         } else document.body.innerHTML = 'Page not found.';
+        function playFinalSong() {
+    // Find the last music card inside final-decision
+    const finalCard = document.querySelector('#final-decision .music-card');
+    if (!finalCard) return;
+
+    const src = finalCard.getAttribute('data-src');
+    if (!src) return;
+
+    // If audio already created, reuse it
+    if (!finalCard._audio) {
+        finalCard._audio = new Audio(src);
+        finalCard._audio.volume = 0.6;   // adjust if needed
+        finalCard._audio.loop = true;    // 🔁 loop
+    }
+
+    const audio = finalCard._audio;
+
+    audio.volume = 0;
+audio.play().catch(() => {});
+
+let fade = 0;
+const interval = setInterval(() => {
+    fade += 0.02;
+    audio.volume = Math.min(fade, 0.6);
+    if (fade >= 0.6) clearInterval(interval);
+}, 100);
+
+    
+    // Update play button icon
+    const btn = finalCard.querySelector('.play-btn');
+    if (btn) btn.textContent = "⏸️";
+}
+
     </script>
 </body>
 </html>
+
